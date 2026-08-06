@@ -1,0 +1,23 @@
+hdWGCNA:
+  enabled: true
+  grouping_column: cell_type_l1     # REQUIRED coherent population
+  group_values: []                  # REQUIRED explicit labels
+  minimum_samples: 3
+  minimum_cells_per_sample: 100
+  minimum_cells_per_group: 100
+  gene_select: fraction
+  gene_fraction: 0.05
+  reduction: pca
+  dimensions: 30
+  metacell_k: 25
+  metacell_mode: average
+  soft_powers: [1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,24,28,30]
+  soft_power: null
+  scale_free_threshold: 0.8
+  network_type: signed
+  correlation_function: bicor
+  minimum_module_size: 30
+  merge_cut_height: 0.25
+  harmonize_module_eigengenes_by: [sample_id]
+  module_score_method: UCell
+  trait_columns: [condition]

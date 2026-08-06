@@ -1,0 +1,877 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Single-cell publication workflow V5 configuration",
+  "type": "object",
+  "required": [
+    "project_name",
+    "project_root",
+    "input",
+    "metadata",
+    "analysis",
+    "qc",
+    "annotation",
+    "comparisons",
+    "advanced_modules",
+    "figures",
+    "output"
+  ],
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "path",
+        "species",
+        "modality"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "auto",
+            "10x_mtx",
+            "10x_h5",
+            "seurat_rds",
+            "sce_rds",
+            "h5ad",
+            "table",
+            "multi_10x",
+            "rds"
+          ]
+        },
+        "species": {
+          "enum": [
+            "human",
+            "mouse"
+          ]
+        },
+        "modality": {
+          "enum": [
+            "scRNA",
+            "snRNA"
+          ]
+        },
+        "sample_metadata_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sample_metadata_key": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "sample_column",
+        "condition_column",
+        "paired"
+      ],
+      "properties": {
+        "paired": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "analysis": {
+      "type": "object",
+      "required": [
+        "mode",
+        "normalization",
+        "integration"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "full",
+            "fast",
+            "resume",
+            "reannotate",
+            "figures_only",
+            "audit",
+            "project_profile"
+          ]
+        },
+        "normalization": {
+          "enum": [
+            "sct_v2",
+            "log"
+          ]
+        },
+        "integration": {
+          "enum": [
+            "auto",
+            "rpca",
+            "none"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "qc": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "comparisons": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "pathways": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "advanced_modules": {
+      "type": "object",
+      "required": [
+        "cnv",
+        "communication",
+        "trajectory",
+        "nmf",
+        "hdWGCNA",
+        "spatial",
+        "drug_response",
+        "virtual_knockout"
+      ],
+      "properties": {
+        "cnv": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "method": {
+              "enum": [
+                "copykat",
+                "infercna"
+              ]
+            },
+            "reference_labels": {
+              "type": "array"
+            },
+            "candidate_labels": {
+              "type": "array"
+            },
+            "minimum_reference_cells": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "communication": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "method": {
+              "enum": [
+                "cellchat"
+              ]
+            },
+            "grouping_column": {
+              "type": "string"
+            },
+            "minimum_cells_per_group_sample": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "trajectory": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "method": {
+              "enum": [
+                "slingshot"
+              ]
+            },
+            "subset_column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "subset_values": {
+              "type": "array"
+            },
+            "root_cluster": {},
+            "minimum_cells": {
+              "type": "integer",
+              "minimum": 50
+            },
+            "run_tradeSeq": {
+              "type": "boolean"
+            },
+            "tradeSeq_knots": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 3
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "nmf": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "backend": {
+              "enum": [
+                "auto",
+                "genenmf",
+                "nmf_fallback"
+              ]
+            },
+            "subset_column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "subset_values": {
+              "type": "array"
+            },
+            "minimum_samples": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "ranks": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 2
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "hdWGCNA": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "grouping_column": {
+              "type": "string"
+            },
+            "group_values": {
+              "type": "array"
+            },
+            "minimum_samples": {
+              "type": "integer",
+              "minimum": 3
+            },
+            "soft_powers": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "network_type": {
+              "enum": [
+                "signed",
+                "unsigned",
+                "signed hybrid"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "spatial": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "object_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "data_dir": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "normalization": {
+              "enum": [
+                "sct",
+                "log"
+              ]
+            },
+            "minimum_locations": {
+              "type": "integer",
+              "minimum": 20
+            },
+            "run_label_transfer": {
+              "type": "boolean"
+            },
+            "run_rctd": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "drug_response": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "backend": {
+              "enum": [
+                "signature_reversal",
+                "signature_score",
+                "oncopredict"
+              ]
+            },
+            "signature_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "minimum_gene_overlap": {
+              "type": "integer",
+              "minimum": 5
+            },
+            "training_expression_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "training_response_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "virtual_knockout": {
+          "type": "object",
+          "required": [
+            "enabled"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "backend": {
+              "enum": [
+                "sctenifoldknk"
+              ]
+            },
+            "target_genes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "targets_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "maximum_targets": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "allow_large_screen": {
+              "type": "boolean"
+            },
+            "subset_column": {
+              "type": "string"
+            },
+            "subset_values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allow_all_cells": {
+              "type": "boolean"
+            },
+            "condition_column": {
+              "type": "string"
+            },
+            "baseline_conditions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "require_baseline_condition_when_multiple": {
+              "type": "boolean"
+            },
+            "allowed_annotation_confidence": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "High",
+                  "Medium",
+                  "Low",
+                  "Ambiguous",
+                  "Doublet-like",
+                  "Unresolved"
+                ]
+              }
+            },
+            "assay": {
+              "type": "string"
+            },
+            "analysis_unit": {
+              "enum": [
+                "sample_stratified_consensus",
+                "balanced_pooled",
+                "both"
+              ]
+            },
+            "minimum_cells_per_sample": {
+              "type": "integer",
+              "minimum": 50
+            },
+            "maximum_cells_per_sample": {
+              "type": "integer",
+              "minimum": 50
+            },
+            "minimum_eligible_samples": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minimum_target_expressing_fraction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minimum_target_expressing_cells": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "subsampling_repeats": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maximum_pooled_cells": {
+              "type": "integer",
+              "minimum": 100
+            },
+            "minimum_balanced_cells_per_sample": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "gene_universe_method": {
+              "enum": [
+                "variable_features",
+                "expressed",
+                "configured"
+              ]
+            },
+            "gene_universe_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "minimum_genes": {
+              "type": "integer",
+              "minimum": 100
+            },
+            "maximum_genes": {
+              "type": "integer",
+              "minimum": 100
+            },
+            "minimum_global_detection_fraction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minimum_detection_fraction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minimum_sample_fraction_for_gene": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "variance_estimation_maximum_cells": {
+              "type": "integer",
+              "minimum": 100
+            },
+            "exclude_gene_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "prior_network_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "n_networks": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "cells_per_network": {
+              "type": "integer",
+              "minimum": 50
+            },
+            "principal_components": {
+              "type": "integer",
+              "minimum": 3
+            },
+            "network_quantile": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "symmetric": {
+              "type": "boolean"
+            },
+            "scale_scores": {
+              "type": "boolean"
+            },
+            "directionality_lambda": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "tensor_rank": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "tensor_max_iter": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "tensor_max_error": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "tensor_decimal_places": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "manifold_dimensions": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "workers": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "fdr_threshold": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "minimum_repeat_recurrence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minimum_sample_recurrence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "network_top_genes": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "network_edge_quantile": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minimum_edge_recurrence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "similarity_top_genes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "gmt_path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "pathway_collection": {
+              "type": "string"
+            },
+            "minimum_pathway_query_genes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minimum_pathway_overlap": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "save_full_backend_objects": {
+              "type": "boolean"
+            },
+            "subsampling_fraction": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": true,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "enabled": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "backend",
+                  "target_genes",
+                  "subset_column",
+                  "subset_values",
+                  "analysis_unit"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "figures": {
+      "type": "object",
+      "required": [
+        "export_individual_figures",
+        "composite_figures_forbidden",
+        "build_contact_sheet"
+      ],
+      "properties": {
+        "font_family": {
+          "type": "string"
+        },
+        "base_size_pt": {
+          "type": "number",
+          "minimum": 6
+        },
+        "dpi": {
+          "type": "integer",
+          "minimum": 150
+        },
+        "proof_dpi": {
+          "type": "integer",
+          "minimum": 72
+        },
+        "reduction": {
+          "type": "string"
+        },
+        "embedding_axis_style": {
+          "enum": [
+            "arrows",
+            "classic"
+          ]
+        },
+        "embedding_point_size": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "embedding_point_alpha": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_embedding_points": {
+          "type": "integer",
+          "minimum": 1000
+        },
+        "raster_threshold": {
+          "type": "integer",
+          "minimum": 1000
+        },
+        "cluster_hulls": {
+          "type": "boolean"
+        },
+        "celltype_hulls": {
+          "type": "boolean"
+        },
+        "marker_genes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "continuous_features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "split_violin_features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pseudotime_trend_columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "export_individual_figures": {
+          "const": true
+        },
+        "composite_figures_forbidden": {
+          "const": true
+        },
+        "build_contact_sheet": {
+          "const": false
+        },
+        "tradeSeq_top_genes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_cnv_samples": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_communication_conditions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "communication_top_interactions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "communication_top_edges": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "communication_contrast_top_n": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "nmf_top_genes_per_program": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_nmf_program_embeddings": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hdwgcna_hubs_per_module": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_hdwgcna_modules": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_hdwgcna_module_embeddings": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_spatial_slices": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_spatial_celltype_maps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_spatial_gene_maps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_spatial_variable_genes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_drug_celltypes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_drug_distribution_plots": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "drug_top_n": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "virtual_knockout_top_genes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "virtual_knockout_manifold_genes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "virtual_knockout_network_edges": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "virtual_knockout_top_pathways": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,12 @@
+cnv:
+  enabled: true
+  method: copykat                   # copykat|infercna
+  label_column: cell_type_l1
+  reference_labels: []              # REQUIRED known normal populations
+  candidate_labels: []              # REQUIRED suspected target population(s)
+  minimum_reference_cells: 50
+  minimum_reference_cells_per_sample: 20
+  minimum_cells_per_sample: 200
+  maximum_cells_per_sample: 12000
+  workers: 4
+  seed: 20260804

@@ -1,0 +1,19 @@
+trajectory:
+  enabled: true
+  subset_column: cell_type_l1       # REQUIRED
+  subset_values: []                 # REQUIRED lineage-compatible labels
+  cluster_column: cluster_raw
+  root_cluster: null                # REQUIRED biologically justified root
+  end_clusters: []
+  reduction: umap
+  minimum_cells: 200
+  allow_breaks: false
+  shrink: true
+  trend_columns: []
+  run_tradeSeq: true
+  tradeSeq_genes: variable
+  tradeSeq_maximum_genes: 3000
+  tradeSeq_knots: [4,5,6,7,8]
+  tradeSeq_selected_knots: null
+  tradeSeq_fixed_effects: []
+  tradeSeq_l2fc: 0

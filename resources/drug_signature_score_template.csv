@@ -1,0 +1,4 @@
+drug,gene,direction
+ExampleDrugA,GENE1,down
+ExampleDrugA,GENE2,up
+ExampleDrugB,GENE3,down

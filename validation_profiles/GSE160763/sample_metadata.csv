@@ -1,0 +1,9 @@
+sample_id,geo_accession,patient_id,condition,injury,treatment,batch,replicate,tissue,species,sex,strain,pooled_mice,endpoint_dpi
+Control_Vehicle_1,GSM4878686,Pool_CV_1,Control_Vehicle,Control,Vehicle,Replicate_1,1,Cortex,mouse,male,C57BL/6,3,7
+Control_Vehicle_2,GSM4878687,Pool_CV_2,Control_Vehicle,Control,Vehicle,Replicate_2,2,Cortex,mouse,male,C57BL/6,3,7
+Control_PLX5622_1,GSM4878688,Pool_CP_1,Control_PLX5622,Control,PLX5622,Replicate_1,1,Cortex,mouse,male,C57BL/6,3,7
+Control_PLX5622_2,GSM4878689,Pool_CP_2,Control_PLX5622,Control,PLX5622,Replicate_2,2,Cortex,mouse,male,C57BL/6,3,7
+TBI_Vehicle_1,GSM4878690,Pool_TV_1,TBI_Vehicle,TBI,Vehicle,Replicate_1,1,Cortex,mouse,male,C57BL/6,3,7
+TBI_Vehicle_2,GSM4878691,Pool_TV_2,TBI_Vehicle,TBI,Vehicle,Replicate_2,2,Cortex,mouse,male,C57BL/6,3,7
+TBI_PLX5622_1,GSM4878692,Pool_TP_1,TBI_PLX5622,TBI,PLX5622,Replicate_1,1,Cortex,mouse,male,C57BL/6,3,7
+TBI_PLX5622_2,GSM4878693,Pool_TP_2,TBI_PLX5622,TBI,PLX5622,Replicate_2,2,Cortex,mouse,male,C57BL/6,3,7

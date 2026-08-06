@@ -1,0 +1,7 @@
+communication:
+  enabled: true
+  grouping_column: cell_type_l1
+  exclude_labels: [Unresolved, Ambiguous, Doublet-like]
+  minimum_cells_per_group_sample: 20
+  probability_type: triMean
+  population_size: false

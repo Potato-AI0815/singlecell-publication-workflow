@@ -1,0 +1,16 @@
+name: static-checks
+on:
+  push:
+  pull_request:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml jsonschema
+      - run: python tests/static_validate.py .
+      - run: python tests/validate_config.py templates/config.example.yml templates/config.schema.json
+      - run: python tests/validate_config.py templates/config.full.yml templates/config.schema.json

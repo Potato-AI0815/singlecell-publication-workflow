@@ -1,0 +1,157 @@
+project_name: GSE160763_mouse_cortex_TBI
+project_root: C:/Users/YHN/Desktop/Qoder/GSE160763_analysis
+run_id: auto
+
+input:
+  path: C:/Users/YHN/Desktop/Qoder/GSE160763_analysis/input/10x_by_sample
+  type: multi_10x
+  metadata_path: null
+  metadata_barcode_column: cell_id
+  sample_metadata_path: C:/Users/YHN/Desktop/Qoder/GSE160763_analysis/input/sample_metadata.csv
+  sample_metadata_key: sample_id
+  raw_matrix_path: null
+  accepted_object_path: null
+  species: mouse
+  modality: scRNA
+  assay: RNA
+
+metadata:
+  sample_column: sample_id
+  patient_column: patient_id
+  condition_column: condition
+  batch_column: batch
+  tissue_column: tissue
+  paired: false
+  aliases_enabled: true
+
+runtime:
+  seed: 20260804
+  workers: 4
+  future_max_gb: 24
+  hash_large_files: true
+  hash_max_gb: 20
+  stop_on_warning: false
+
+analysis:
+  mode: fast
+  force: false
+  normalization: log
+  regress_covariates: []
+  integration: rpca
+  pcs: 30
+  clustering_resolution: auto
+  resolution_grid: [0.2, 0.4, 0.6, 0.8, 1.0]
+  minimum_cluster_cells: 20
+  run_markers: true
+  run_composition: true
+  run_pseudobulk_de: false
+  run_pathway_analysis: false
+
+qc:
+  mad_multiplier: 3
+  min_features: 200
+  max_features_guardrail: 8000
+  min_counts: 500
+  max_mito_scRNA: 20
+  max_mito_snRNA: 10
+  minimum_cells_standard: 200
+  minimum_cells_descriptive: 50
+  run_doublets: true
+  doublet_method: scDblFinder
+  run_ambient_correction: false
+
+annotation:
+  dictionary_l1: resources/marker_dictionary_mouse_cortex_l1.csv
+  dictionary_l2: resources/marker_dictionary_mouse_cortex_l2.csv
+  run_singleR: false
+  reference: auto
+  marker_score_min: 0.03
+  marker_margin_min: 0.01
+  minimum_cluster_cells_fine: 80
+  unresolved_label: Unresolved
+
+comparisons:
+  reference: Control_Vehicle
+  target: TBI_Vehicle
+  covariates: [batch]
+  minimum_cells_per_pseudobulk: 20
+  minimum_replicates_per_condition: 3
+  allowed_annotation_confidence: [High, Medium]
+  exclude_celltypes: [Unresolved, Ambiguous, Doublet-like]
+  fdr_threshold: 0.05
+  logfc_display_threshold: 0.5
+
+pathways:
+  gmt_path: null
+  collection: H
+  minimum_size: 10
+  maximum_size: 500
+
+advanced_modules:
+  cnv: {enabled: false}
+  communication: {enabled: false}
+  trajectory: {enabled: false}
+  nmf: {enabled: false}
+  hdWGCNA: {enabled: false}
+  spatial: {enabled: false}
+  drug_response: {enabled: false}
+  virtual_knockout: {enabled: false}
+
+figures:
+  font_family: Arial
+  base_size_pt: 10
+  panel_tag_pt: 16
+  dpi: 600
+  proof_dpi: 300
+  width_mm: 183
+  height_mm: 135
+  single_width_mm: 183
+  single_height_mm: 135
+  proof_width_mm: 183
+  thumbnail_width_mm: 90
+  reduction: auto
+  embedding_axis_style: arrows
+  embedding_point_size: 0.20
+  embedding_point_alpha: 0.78
+  max_embedding_points: 60000
+  raster_threshold: 30000
+  raster_dpi: 300
+  cluster_hulls: true
+  celltype_hulls: true
+  hull_minimum_cells: 80
+  hull_component_method: auto
+  hull_concavity: 2
+  hull_alpha: 0.14
+  label_minimum_cells: 30
+  max_sample_colours: 16
+  continuous_low: "#E67861"
+  continuous_high: "#557FB5"
+  marker_genes: [auto]
+  maximum_marker_genes: 36
+  continuous_features: [Tmem119, Gja1, Plp1, Meg3]
+  maximum_continuous_features: 4
+  split_violin_features: [auto]
+  maximum_split_violin_features: 4
+  maximum_violin_celltypes: 12
+  split_violin_width: 0.88
+  split_violin_density_points: 256
+  maximum_de_celltypes: 12
+  volcano_label_n: 10
+  maximum_enrichment_celltypes: 12
+  enrichment_top_n: 15
+  pseudotime_trend_columns: []
+  pseudotime_group_column: condition
+  pseudotime_bins: 40
+  pseudotime_span: 0.45
+  tradeSeq_top_genes: 30
+  export_individual_figures: true
+  composite_figures_forbidden: true
+  build_contact_sheet: false
+  max_split_panels: 12
+
+output:
+  root: C:/Users/YHN/Desktop/Qoder/GSE160763_analysis/results
+  existing_result_root: null
+  overwrite: false
+  save_intermediate_objects: true
+  save_full_qc_object: true

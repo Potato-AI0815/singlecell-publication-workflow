@@ -1,0 +1,16 @@
+nmf:
+  enabled: true
+  backend: auto
+  subset_column: cell_type_l1       # REQUIRED coherent population
+  subset_values: []                 # REQUIRED explicit labels
+  minimum_samples: 2
+  minimum_cells_per_sample: 100
+  maximum_cells_per_sample: 5000
+  minimum_features: 500
+  maximum_features: 2000
+  ranks: [4, 5, 6, 7, 8, 9]
+  n_runs: 10
+  n_meta_programs: 6
+  maximum_genes_per_program: 100
+  summary_group_column: cell_type_l1
+  seed: 20260804

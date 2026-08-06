@@ -1,0 +1,16 @@
+args<-commandArgs(trailingOnly=TRUE);if(!length(args))stop("Usage: Rscript 03_validate_GSE160763_outputs.R RESULT_ROOT [smoke|sct]")
+root<-normalizePath(args[[1]],winslash="/",mustWork=TRUE);mode<-if(length(args)>=2)args[[2]] else "smoke"
+rows<-list();add<-function(check,status,evidence)rows[[length(rows)+1]]<<-data.frame(check=check,status=status,evidence=as.character(evidence),stringsAsFactors=FALSE)
+req<-c("00_input_audit/sample_design_table.csv","01_objects/02_raw_standardized_seurat.rds","01_objects/06_annotated.rds","02_qc/sample_qc_summary.csv","04_annotation/annotation_evidence.csv","14_qa/final_qa.csv")
+for(f in req)add(paste0("file:",f),if(file.exists(file.path(root,f)))"PASS" else "FAIL",file.path(root,f))
+if(file.exists(file.path(root,"00_input_audit/sample_design_table.csv"))){d<-read.csv(file.path(root,"00_input_audit/sample_design_table.csv"),stringsAsFactors=FALSE);add("eight_samples",if(nrow(d)==8)"PASS" else "FAIL",nrow(d));tb<-table(d$condition);add("four_conditions_two_samples_each",if(length(tb)==4&&all(tb==2))"PASS" else "FAIL",paste(names(tb),tb,collapse="; "))}
+if(file.exists(file.path(root,"01_objects/02_raw_standardized_seurat.rds"))){o<-readRDS(file.path(root,"01_objects/02_raw_standardized_seurat.rds"));add("raw_cell_total",if(ncol(o)==40666)"PASS" else "FAIL",ncol(o));add("unique_cell_ids",if(!anyDuplicated(colnames(o)))"PASS" else "FAIL",sum(duplicated(colnames(o))))}
+if(file.exists(file.path(root,"01_objects/06_annotated.rds"))){o<-readRDS(file.path(root,"01_objects/06_annotated.rds"));maj<-c("Microglia","Astrocyte","Oligodendrocyte","Neuron","Endothelial","Pericyte");hit<-intersect(maj,unique(as.character(o$cell_type_l1)));add("major_cortex_types",if(length(hit)>=4)"PASS" else "WARNING",paste(hit,collapse=","));unr<-mean(o$cell_type_l1=="Unresolved",na.rm=TRUE);add("unresolved_fraction",if(unr<=0.35)"PASS" else "WARNING",round(unr,4))}
+figdirs<-c(file.path(root,"09_main_figures"),file.path(root,"10_extended_figures"));ff<-unlist(lapply(figdirs,function(d)if(dir.exists(d))list.dirs(d,recursive=FALSE,full.names=TRUE)else character()));add("independent_figure_directories",if(length(ff)>0)"PASS" else "FAIL",length(ff));bad<-ff[grepl("composite|overview|montage|contact|collage",basename(ff),ignore.case=TRUE)];add("no_composite_figures",if(!length(bad))"PASS" else "FAIL",paste(basename(bad),collapse=","))
+if(mode=="sct"){
+  dp<-file.path(root,"07_differential_expression/de_status.csv")
+  if(file.exists(dp)){ds<-read.csv(dp,stringsAsFactors=FALSE);add("n2_de_gate",if(nrow(ds)>0&&all(ds$status=="NOT_EVALUABLE"))"PASS" else "WARNING",paste(unique(ds$status),collapse=","))}else add("n2_de_gate","FAIL","de_status.csv missing")
+}
+res<-do.call(rbind,rows);outdir<-file.path(root,"14_qa");dir.create(outdir,showWarnings=FALSE,recursive=TRUE);write.csv(res,file.path(outdir,"GSE160763_validation_report.csv"),row.names=FALSE)
+overall<-if(any(res$status=="FAIL"))"FAIL" else if(any(res$status=="WARNING"))"WARNING" else "PASS"
+writeLines(c(paste0("# GSE160763 validation: ",overall),"",paste0("- ",res$check,": **",res$status,"** — ",res$evidence)),file.path(outdir,"GSE160763_validation_report.md"));cat("GSE160763_VALIDATION=",overall,"\n",sep="")

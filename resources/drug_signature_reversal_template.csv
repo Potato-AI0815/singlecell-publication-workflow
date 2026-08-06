@@ -1,0 +1,4 @@
+drug,gene,effect
+ExampleDrugA,GENE1,-1.2
+ExampleDrugA,GENE2,0.8
+ExampleDrugB,GENE1,0.5

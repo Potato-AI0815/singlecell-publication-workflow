@@ -1,0 +1,13 @@
+drug_response:
+  enabled: true
+  backend: signature_reversal       # signature_reversal|signature_score|oncopredict
+  signature_path: null              # REQUIRED for signature backends
+  differential_expression_path: null
+  minimum_gene_overlap: 20
+  minimum_signature_genes: 5
+  therapeutic_cluster_drugs: 30
+  therapeutic_clusters: 5
+  training_expression_path: null    # REQUIRED for oncoPredict
+  training_response_path: null      # REQUIRED for oncoPredict
+  batch_correct: eb
+  power_transform: true

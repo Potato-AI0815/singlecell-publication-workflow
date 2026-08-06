@@ -1,0 +1,19 @@
+label,positive,negative
+Microglia,Tmem119;P2ry12;Hexb;Sall1;Csf1r;Cx3cr1;Fcrls;Siglech,Ccr2;Ly6c2;S100a8;S100a9;Col1a1;Gja1;Plp1;Meg3
+Peripheral myeloid-like,Lyz2;Ccr2;Ly6c2;S100a8;S100a9;Fn1;Lgals3;Ctss;Tyrobp,Tmem119;P2ry12;Sall1;Gja1;Plp1;Meg3
+Astrocyte,Gja1;Aqp4;Aldoc;Slc1a3;Slc1a2;Gfap;S100b;Clu,Tmem119;P2ry12;Plp1;Mbp;Meg3;Cldn5
+Oligodendrocyte,Plp1;Mbp;Mog;Mag;Cnp;Mal;Opalin;Sox10,Pdgfra;Cspg4;Tmem119;Gja1;Meg3
+OPC,Pdgfra;Cspg4;Olig1;Olig2;Sox10;Vcan,Mbp;Mog;Opalin;Tmem119;Gja1
+Neuron,Meg3;Rbfox3;Snap25;Syt1;Tubb3;Map2;Grin1;Stmn2,Tmem119;Gja1;Plp1;Cldn5;Col1a1
+Endothelial,Cldn5;Pecam1;Kdr;Flt1;Emcn;Esam;Abcb1a;Ly6c1,Col1a1;Col1a2;Rgs5;Tmem119;Gja1
+Pericyte,Rgs5;Cspg4;Pdgfrb;Des;Abcc9;Kcnj8;Mcam,Cldn5;Pecam1;Col1a1;Meg3
+Vascular smooth muscle,Acta2;Tagln;Myh11;Myl9;Cnn1;Mustn1,Cldn5;Pecam1;Pdgfra;Meg3
+Fibroblast/VLMC,Col1a1;Col1a2;Dcn;Lum;Col3a1;Col6a1;Pdgfra,Cldn5;Pecam1;Rgs5;Tmem119;Meg3
+Ependymal,Foxj1;Pifo;Spef1;Tmem212;Dynlrb2,Meg3;Tmem119;Gja1;Plp1
+Choroid plexus epithelial,Ttr;Krt8;Krt18;Krt19;Epcam;Klf5,Ptprc;Tmem119;Pecam1;Col1a1
+T cell,Cd3d;Cd3e;Trac;Lck;Cd247;Ltb,Ms4a1;Cd79a;Tmem119;Gja1;Plp1
+NK,Nkg7;Ncr1;Prf1;Klrb1c;Fcer1g;Tyrobp,Cd3d;Cd3e;Trac;Ms4a1;Gja1
+B cell,Ms4a1;Cd79a;Cd74;Cd37;H2-Aa;Cd22,Cd3d;Cd3e;Tmem119;Gja1
+Dendritic cell,Fcer1a;Flt3;Itgax;Clec10a;H2-Aa;Cst3,Tmem119;P2ry12;Mzb1;Gja1
+Neutrophil,S100a8;S100a9;Csf3r;Ly6g;Retnlg;Camp,Tmem119;P2ry12;Cd3d;Ms4a1
+Erythroid,Hbb-bs;Hbb-bt;Hba-a1;Hba-a2;Alas2;Gypa,Ptprc;Gja1;Plp1;Cldn5

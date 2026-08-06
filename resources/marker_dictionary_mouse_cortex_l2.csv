@@ -1,0 +1,13 @@
+parent,label,positive,negative
+Microglia,Homeostatic microglia,P2ry12;Tmem119;Sall1;Fcrls;Hexb;Siglech,Ifit1;Isg15;Spp1;Lgals3
+Microglia,IFN-response microglia,Ifit1;Ifit3;Isg15;Irf7;Oas1a;Oas1g;Stat1,P2ry12;Sall1
+Microglia,Activated/phagocytic microglia,Apoe;Lpl;Cst7;Lgals3;Itgax;Spp1;Trem2,P2ry12;Sall1
+Astrocyte,Homeostatic astrocyte,Aqp4;Aldoc;Slc1a3;Slc1a2;Gja1,Lcn2;Serpina3n;Vim
+Astrocyte,Reactive astrocyte,Gfap;Vim;Lcn2;Serpina3n;C3;Clu,Aldoc;Slc1a2
+Neuron,Excitatory neuron,Slc17a7;Slc17a6;Satb2;Cux1;Cux2;Tbr1,Gad1;Gad2;Slc32a1
+Neuron,Inhibitory neuron,Gad1;Gad2;Slc6a1;Slc32a1;Dlx1;Dlx2,Slc17a7;Slc17a6
+Oligodendrocyte,Mature oligodendrocyte,Mbp;Mog;Mag;Plp1;Opalin;Mal,Pdgfra;Cspg4;Vcan
+OPC,Oligodendrocyte precursor,Pdgfra;Cspg4;Olig1;Olig2;Vcan,Mbp;Mog;Opalin
+Endothelial,Capillary endothelial,Rgcc;Car4;Cldn5;Abcb1a;Slc7a5,Gja5;Acta2
+Endothelial,Arterial endothelial,Gja5;Bmx;Efnb2;Sox17;Cldn5,Car4;Nr2f2
+Endothelial,Venous endothelial,Nr2f2;Vcam1;Slc38a5;Cldn5,Gja5;Bmx

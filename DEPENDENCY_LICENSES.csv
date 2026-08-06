@@ -1,0 +1,11 @@
+component,role,distribution,license_status,commercial_note
+Seurat,core analysis,external,MIT verified from upstream,commercial use permitted under MIT terms
+SeuratObject,object model,external,verify installed package metadata,not vendored
+CellChat,cell communication,external optional,GPL-3.0 verified from upstream,commercial use allowed subject to GPL
+hdWGCNA,co-expression,external optional,GPL-3.0 verified from upstream,commercial use allowed subject to GPL
+spacexr/RCTD,spatial deconvolution,external optional,GPL-3.0 verified from upstream,commercial use allowed subject to GPL
+copykat,CNA inference,external optional,restrictive academic/non-profit research terms,commercial use or redistribution requires written upstream approval
+scTenifoldKnk,virtual knockout,manual external optional,all-rights-reserved notice/no standard OSS license confirmed,do not auto-install or redistribute
+GeneNMF,NMF programs,external optional,MIT verified from upstream,not vendored
+Bioconductor packages,statistics and data containers,external,read installed License fields,use scripts/audit_installed_licenses.R
+MSigDB or CMap resources,optional signatures,user supplied,separate data/resource terms,do not redistribute by default

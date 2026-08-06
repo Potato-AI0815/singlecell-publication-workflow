@@ -1,0 +1,14 @@
+checkpoint,expected,status_scope
+input_cells,20074,core
+qc_cells,17391,core
+samples,12,core
+paired_patients,6,core
+clusters,14,core
+final_status,PASS_WITH_WARNINGS,core
+cnv_samples_completed,12,cnv
+cnv_tumor_epithelial_aneuploid_fraction,0.804,cnv
+cellchat_samples_completed,12,cellchat
+cellchat_interactions,6247,cellchat
+cellchat_pathways,106,cellchat
+nmf_meta_programs,6,nmf
+hdwgcna_tom_bytes_approx,454000000,hdwgcna_partial

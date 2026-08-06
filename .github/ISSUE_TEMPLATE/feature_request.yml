@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose a scientifically gated improvement
+title: "[FEATURE] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Scientific or workflow problem
+    validations:
+      required: true
+  - type: textarea
+    id: prerequisites
+    attributes:
+      label: Required inputs and evaluability gate
+    validations:
+      required: true
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Expected outputs, Source Data and QA
+    validations:
+      required: true

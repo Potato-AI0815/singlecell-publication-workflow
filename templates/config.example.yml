@@ -1,0 +1,382 @@
+project_name: example_scRNA
+project_root: /absolute/path/to/project
+run_id: auto
+
+input:
+  path: /absolute/path/to/input
+  type: auto                 # auto|10x_mtx|10x_h5|seurat_rds|sce_rds|h5ad|table|multi_10x
+  metadata_path: null             # optional cell-level metadata
+  metadata_barcode_column: cell_id
+  sample_metadata_path: null      # optional one-row-per-sample metadata
+  sample_metadata_key: sample_id
+  raw_matrix_path: null
+  accepted_object_path: null  # required for a new reannotate run
+  species: human             # human|mouse
+  modality: scRNA            # scRNA|snRNA
+  assay: RNA
+
+metadata:
+  sample_column: auto
+  patient_column: auto
+  condition_column: auto
+  batch_column: auto
+  tissue_column: auto
+  paired: false
+  aliases_enabled: true
+
+runtime:
+  seed: 20260804
+  workers: 4
+  future_max_gb: 16
+  hash_large_files: true
+  hash_max_gb: 20
+  stop_on_warning: false
+
+analysis:
+  mode: full                 # full|fast|resume|reannotate|figures_only|audit|project_profile
+  force: false
+  normalization: sct_v2      # sct_v2|log
+  regress_covariates: []
+  integration: auto          # auto|rpca|none
+  pcs: auto
+  clustering_resolution: auto
+  resolution_grid: [0.2, 0.4, 0.6, 0.8, 1.0, 1.2]
+  minimum_cluster_cells: 20
+  run_markers: true
+  run_composition: true
+  run_pseudobulk_de: true
+  run_pathway_analysis: true
+
+qc:
+  mad_multiplier: 3
+  min_features: 200
+  max_features_guardrail: 8000
+  min_counts: 500
+  max_mito_scRNA: 20
+  max_mito_snRNA: 10
+  minimum_cells_standard: 200
+  minimum_cells_descriptive: 50
+  run_doublets: true
+  doublet_method: scDblFinder
+  run_ambient_correction: auto
+
+annotation:
+  dictionary_l1: auto            # auto or path relative to skill/config directory
+  dictionary_l2: auto            # optional tissue-specific fine dictionary
+  run_singleR: true
+  reference: auto
+  marker_score_min: 0.05
+  marker_margin_min: 0.02
+  minimum_cluster_cells_fine: 50
+  unresolved_label: Unresolved
+
+comparisons:
+  reference: Control
+  target: Treatment
+  covariates: []
+  minimum_cells_per_pseudobulk: 20
+  minimum_replicates_per_condition: 3
+  allowed_annotation_confidence: [High, Medium]
+  exclude_celltypes: [Unresolved]
+  fdr_threshold: 0.05
+  logfc_display_threshold: 0.5
+
+pathways:
+  gmt_path: null
+  collection: H
+  minimum_size: 10
+  maximum_size: 500
+
+advanced_modules:
+  # All advanced modules default to disabled. Enable only modules whose scientific prerequisites are met.
+  cnv:
+    enabled: false
+    method: copykat              # copykat|infercna; inferCNV is intentionally not executed
+    label_column: cell_type_l1
+    reference_labels: []         # explicit normal/diploid populations; mandatory
+    candidate_labels: []         # optional tumour/candidate populations
+    minimum_reference_cells: 50
+    minimum_reference_cells_per_sample: 20
+    minimum_cells_per_sample: 200
+    maximum_cells_per_sample: 12000
+    window_size: 25
+    workers: 4
+
+  communication:
+    enabled: false
+    method: cellchat
+    grouping_column: cell_type_l1
+    exclude_labels: [Unresolved, Ambiguous, Doublet-like]
+    minimum_cells_per_group_sample: 20
+    probability_type: triMean
+    population_size: false
+
+  trajectory:
+    enabled: false
+    method: slingshot
+    subset_column: cell_type_l1
+    subset_values: []            # explicit lineage population(s)
+    cluster_column: cluster_raw
+    root_cluster: null           # explicit biological root; mandatory
+    end_clusters: []
+    reduction: umap
+    minimum_cells: 200
+    allow_breaks: false
+    shrink: true
+    trend_columns: []            # precomputed metadata/module scores to plot along pseudotime
+    run_tradeSeq: true
+    tradeSeq_evaluate_knots: true
+    tradeSeq_knots: [3, 4, 5, 6, 7]
+    tradeSeq_selected_knots: 6
+    tradeSeq_evaluate_n_genes: 500
+    tradeSeq_minimum_expressing_cells: 20
+    tradeSeq_minimum_genes: 200
+    tradeSeq_maximum_genes: 12000
+    tradeSeq_fixed_effects: []   # optional batch/sample design columns; no intercept is added
+    tradeSeq_l2fc: 0
+    tradeSeq_parallel: false
+
+  nmf:
+    enabled: false
+    backend: auto                # auto|genenmf|nmf_fallback
+    subset_column: cell_type_l1
+    subset_values: []            # usually malignant or another biologically coherent compartment
+    minimum_samples: 2
+    minimum_cells_per_sample: 100
+    maximum_cells_per_sample: 5000
+    minimum_features: 500
+    maximum_features: 2000
+    ranks: [4, 5, 6, 7, 8, 9]
+    n_runs: 10
+    n_meta_programs: 6
+    specificity_weight: 5
+    weight_explained: 0.5
+    maximum_genes_per_program: 100
+    minimum_gene_confidence: 0.5
+    similarity_metric: cosine
+    summary_group_column: cell_type_l1
+    seed: 20260804
+
+  hdWGCNA:
+    enabled: false
+    grouping_column: cell_type_l1
+    group_values: []             # explicit coherent population(s); mandatory
+    minimum_samples: 3
+    minimum_cells_per_sample: 100
+    minimum_cells_per_group: 100
+    gene_select: fraction
+    gene_fraction: 0.05
+    reduction: pca
+    dimensions: 30
+    metacell_k: 25
+    metacell_mode: average
+    maximum_shared_cells: 10
+    target_metacells: 1000
+    soft_powers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 30]
+    soft_power: null
+    scale_free_threshold: 0.8
+    network_type: signed
+    correlation_function: bicor
+    minimum_module_size: 30
+    merge_cut_height: 0.25
+    deep_split: 2
+    harmonize_module_eigengenes_by: [sample_id]
+    module_score_method: UCell
+    module_score_genes: 25
+    hub_genes_per_module: 20
+    trait_columns: [condition]
+    store_tom_in_object: false
+
+  spatial:
+    enabled: false
+    object_path: null            # processed Seurat spatial RDS, preferred
+    data_dir: null               # or Space Ranger output directory
+    matrix_filename: filtered_feature_bc_matrix.h5
+    slice_name: slice1
+    image_name: null
+    sample_column: orig.ident
+    assay: Spatial
+    normalization: sct           # sct|log
+    sct_model_cells: 3000
+    variable_features: 3000
+    dimensions: 30
+    clustering_resolution: 0.4
+    minimum_locations: 100
+    find_spatially_variable_features: true
+    spatial_variable_method: moransi
+    maximum_spatial_test_features: 2000
+    reference_object_path: null  # defaults to the main annotated scRNA object
+    reference_label_column: cell_type_l1
+    exclude_reference_labels: [Unresolved, Ambiguous, Doublet-like]
+    run_label_transfer: true
+    run_rctd: true
+    rctd_cores: 4
+    rctd_doublet_mode: full
+    rctd_minimum_reference_cells: 20
+    neighborhood_k: 6
+    neighborhood_permutations: 200
+
+  drug_response:
+    enabled: false
+    backend: signature_reversal  # signature_reversal|signature_score|oncopredict
+    signature_path: null         # CSV: drug,gene,effect; or drug,gene,direction
+    differential_expression_path: null
+    minimum_gene_overlap: 20
+    minimum_signature_genes: 5
+    therapeutic_cluster_drugs: 30
+    therapeutic_clusters: 5
+    minimum_cells_for_therapeutic_clusters: 100
+    training_expression_path: null  # oncoPredict: gene x cell-line expression CSV
+    training_response_path: null    # oncoPredict: cell-line x drug response CSV
+    batch_correct: eb
+    power_transform: true
+    remove_low_varying_genes: 0.2
+    minimum_training_samples: 10
+
+
+  virtual_knockout:
+    enabled: false
+    backend: sctenifoldknk       # WT-only GRN perturbation; exploratory and unsigned
+    target_genes: []             # explicit predeclared symbols; one target is run at a time
+    targets_path: null           # optional CSV: target_gene,target_label,subset_value,priority,rationale
+    maximum_targets: 20
+    allow_large_screen: false
+    subset_column: cell_type_l1
+    subset_values: []            # explicit coherent cell population(s); mandatory unless allow_all_cells
+    allow_all_cells: false
+    condition_column: condition
+    baseline_conditions: []      # explicit WT/control state when multiple conditions are present
+    require_baseline_condition_when_multiple: true
+    allowed_annotation_confidence: [High, Medium]
+    assay: RNA
+    analysis_unit: sample_stratified_consensus  # sample_stratified_consensus|balanced_pooled|both
+    minimum_cells_per_sample: 500
+    maximum_cells_per_sample: 5000
+    minimum_eligible_samples: 2
+    minimum_target_expressing_fraction: 0.05
+    minimum_target_expressing_cells: 20
+    subsampling_repeats: 3
+    subsampling_fraction: 0.8   # draw independent outer cell subsets for stability repeats
+    maximum_pooled_cells: 10000
+    minimum_balanced_cells_per_sample: 100
+    gene_universe_method: variable_features     # variable_features|expressed|configured
+    gene_universe_path: null
+    minimum_genes: 500
+    maximum_genes: 2500
+    minimum_global_detection_fraction: 0.01
+    minimum_detection_fraction: 0.01
+    minimum_sample_fraction_for_gene: 0.5
+    variance_estimation_maximum_cells: 5000
+    exclude_gene_patterns: ["^MT-", "^RPL", "^RPS", "^HB[AB]"]
+    prior_network_path: null      # optional CSV with regulators and targets columns
+    n_networks: 10
+    cells_per_network: 500
+    principal_components: 3
+    network_quantile: 0.9
+    symmetric: false
+    scale_scores: true
+    directionality_lambda: 0
+    tensor_rank: 3
+    tensor_max_iter: 1000
+    tensor_max_error: 1.0e-5
+    tensor_decimal_places: 3
+    manifold_dimensions: 2
+    workers: 4
+    fdr_threshold: 0.05
+    minimum_repeat_recurrence: 0.5
+    minimum_sample_recurrence: 0.5
+    network_top_genes: 50
+    network_edge_quantile: 0.97
+    minimum_edge_recurrence: 0.5
+    similarity_top_genes: 100
+    gmt_path: null
+    pathway_collection: H
+    minimum_pathway_query_genes: 10
+    minimum_pathway_overlap: 3
+    save_full_backend_objects: false
+
+figures:
+  # Publication Figure Engine v5: single figures only. Composite/overview/contact-sheet outputs are forbidden.
+  font_family: Arial
+  base_size_pt: 10
+  panel_tag_pt: 16
+  dpi: 600
+  proof_dpi: 300
+  width_mm: 183
+  height_mm: 135
+  single_width_mm: 183
+  single_height_mm: 135
+  proof_width_mm: 183
+  thumbnail_width_mm: 90
+
+  reduction: auto
+  embedding_axis_style: arrows
+  embedding_point_size: 0.20
+  embedding_point_alpha: 0.78
+  max_embedding_points: 80000
+  raster_threshold: 30000
+  raster_dpi: 300
+  cluster_hulls: true
+  celltype_hulls: true
+  hull_minimum_cells: 80
+  hull_component_method: auto
+  hull_concavity: 2
+  hull_alpha: 0.14
+  label_minimum_cells: 30
+  max_sample_colours: 16
+  continuous_low: "#E67861"
+  continuous_high: "#557FB5"
+
+  marker_genes: [auto]
+  maximum_marker_genes: 36
+  continuous_features: [auto]
+  maximum_continuous_features: 4
+  split_violin_features: [auto]
+  maximum_split_violin_features: 4
+  maximum_violin_celltypes: 12
+  split_violin_width: 0.88
+  split_violin_density_points: 256
+
+  maximum_de_celltypes: 12
+  volcano_label_n: 10
+  maximum_enrichment_celltypes: 12
+  enrichment_top_n: 15
+  pseudotime_trend_columns: []
+  pseudotime_group_column: condition
+  pseudotime_bins: 40
+  pseudotime_span: 0.45
+  tradeSeq_top_genes: 30
+
+  maximum_cnv_samples: 12
+  maximum_communication_conditions: 6
+  communication_top_interactions: 40
+  communication_top_edges: 80
+  communication_contrast_top_n: 30
+  nmf_top_genes_per_program: 20
+  maximum_nmf_program_embeddings: 12
+  hdwgcna_hubs_per_module: 8
+  maximum_hdwgcna_modules: 20
+  maximum_hdwgcna_module_embeddings: 12
+  maximum_spatial_slices: 12
+  maximum_spatial_celltype_maps: 12
+  maximum_spatial_gene_maps: 8
+  maximum_spatial_variable_genes: 30
+  maximum_drug_celltypes: 12
+  maximum_drug_distribution_plots: 8
+  drug_top_n: 30
+  virtual_knockout_top_genes: 30
+  virtual_knockout_manifold_genes: 20
+  virtual_knockout_network_edges: 80
+  virtual_knockout_top_pathways: 20
+
+  export_individual_figures: true
+  composite_figures_forbidden: true
+  build_contact_sheet: false
+  max_split_panels: 12
+
+output:
+  root: auto
+  existing_result_root: null  # source run for audit/figures_only; outputs go to a new run
+  overwrite: false
+  save_intermediate_objects: true
+  save_full_qc_object: true

@@ -1,0 +1,23 @@
+spatial:
+  enabled: true
+  object_path: null                 # REQUIRED processed Seurat spatial RDS, preferred
+  data_dir: null                    # alternative Space Ranger output
+  slice_name: slice1
+  image_name: null
+  sample_column: orig.ident
+  assay: Spatial
+  normalization: sct
+  dimensions: 30
+  clustering_resolution: 0.4
+  minimum_locations: 100
+  find_spatially_variable_features: true
+  spatial_variable_method: moransi
+  reference_object_path: null       # defaults to core annotated scRNA object
+  reference_label_column: cell_type_l1
+  run_label_transfer: true
+  run_rctd: true
+  rctd_cores: 4
+  rctd_doublet_mode: full
+  rctd_minimum_reference_cells: 20
+  neighborhood_k: 6
+  neighborhood_permutations: 200

@@ -1,0 +1,20 @@
+module,status_trigger,required_artifact,meaning
+core,always,14_qa/FINAL_STATUS.txt,Final pipeline status
+core,figure_exported,15_manifests/figure_export_manifest.csv,One row per independent figure
+core,figure_exported,14_qa/figure_generation_status.csv,EXPORTED NOT_EVALUABLE or FAILED per requested figure
+cnv,COMPLETED,17_advanced_modules/cnv_cell_scores.csv,Per-cell expression-inferred CNA summary
+communication,COMPLETED,17_advanced_modules/cellchat_interactions_by_sample.csv,Sample-wise model-derived interactions
+trajectory,COMPLETED,17_advanced_modules/trajectory_cell_data.csv,Cell pseudotime lineage weights and metadata
+trajectory,COMPLETED,17_advanced_modules/trajectory_curve_data.csv,Fitted curve geometry
+nmf,COMPLETED,17_advanced_modules/nmf_meta_program_genes.csv,Recurrent program gene definitions
+nmf,COMPLETED,17_advanced_modules/nmf_scored_object.rds,Full object with program scores
+hdWGCNA,COMPLETED,17_advanced_modules/hdWGCNA_modules.csv,Module membership excluding grey
+hdWGCNA,COMPLETED,17_advanced_modules/hdWGCNA_object.rds,Network-bearing Seurat object
+spatial,COMPLETED,17_advanced_modules/spatial_coordinates_metadata.csv.gz,Slice-aware coordinates and metadata
+spatial,COMPLETED,17_advanced_modules/spatial_processed_object.rds,Processed spatial object
+drug_response,COMPLETED,17_advanced_modules/drug_response_parameters.yml,Backend and interpretation boundary
+virtual_knockout,COMPLETED,17_advanced_modules/virtual_knockout_parameters.yml,Frozen backend parameters and unsigned interpretation
+virtual_knockout,COMPLETED,17_advanced_modules/virtual_knockout_run_manifest.csv,Per-target sample/repeat run status
+virtual_knockout,COMPLETED,17_advanced_modules/virtual_knockout_target_expression_audit.csv,Sample-level target-expression and eligibility audit
+virtual_knockout,COMPLETED,17_advanced_modules/virtual_knockout_target_subset_evaluability.csv,Replicate-evaluability gate by target and cell subset
+virtual_knockout,COMPLETED,17_advanced_modules/virtual_knockout_consensus_genes.csv,Cross-sample unsigned regulatory-impact consensus

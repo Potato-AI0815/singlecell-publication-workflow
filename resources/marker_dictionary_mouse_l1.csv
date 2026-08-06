@@ -1,0 +1,17 @@
+label,positive,negative
+T cell,Cd3d;Cd3e;Trac;Lck;Cd247;Ltb,Ms4a1;Cd79a;Lst1;Col1a1;Epcam
+NK,Nkg7;Ncr1;Prf1;Klrb1c;Fcer1g;Tyrobp,Cd3d;Cd3e;Trac;Ms4a1
+B cell,Ms4a1;Cd79a;Cd74;Cd37;H2-Aa;Cd22,Cd3d;Cd3e;Lst1;Nkg7
+Plasma cell,Mzb1;Jchain;Xbp1;Derl3;Sdc1;Tnfrsf17;Prdm1,Cd3d;Lst1;Col1a1
+Monocyte,Lst1;Tyrobp;Ctss;Lyz2;Fcn1;S100a8;S100a9;Ly6c2,Cd3d;Ms4a1;Col1a1
+Macrophage,C1qa;C1qb;C1qc;Apoe;Adgre1;Mrc1,Cd3d;Ms4a1
+Dendritic cell,Fcer1a;Flt3;Itgax;Clec10a;H2-Aa;Cst3,Mzb1;Xbp1;Derl3
+pDC-like,Tcf4;Il3ra;Siglech;Bst2;Gzmb,Mzb1;Xbp1;Derl3
+Neutrophil,S100a8;S100a9;Csf3r;Ly6g;Retnlg;Camp,Cd3d;Ms4a1;Col1a1
+Mast cell,Tpsb2;Cpa3;Kit;Ms4a2;Hdc,Cd3d;Ms4a1
+Erythroid,Hbb-bs;Hbb-bt;Hba-a1;Hba-a2;Alas2;Gypa,Ptprc;Col1a1;Epcam
+Megakaryocyte/platelet,Ppbp;Pf4;Gp9;Itga2b,Pecam1;Vwf;Lst1
+Endothelial,Pecam1;Vwf;Emcn;Kdr;Ramp2,Col1a1;Col1a2;Dcn;Lum
+Fibroblast,Col1a1;Col1a2;Dcn;Lum;Col3a1;Col6a1,Pecam1;Vwf;Epcam;Krt8
+Pericyte/smooth muscle,Rgs5;Cspg4;Mcam;Acta2;Tagln,Pecam1;Vwf;Col1a1
+Epithelial,Epcam;Krt8;Krt18;Krt19;Krt7,Ptprc;Col1a1;Pecam1
