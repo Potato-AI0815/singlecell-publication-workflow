@@ -1,0 +1,206 @@
+name: R core workflow smoke test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "R/**"
+      - "modules/**"
+      - "tests/**"
+      - "templates/**"
+      - "resources/**"
+      - "run_all.R"
+      - "install_dependencies.R"
+      - ".github/workflows/r-core-smoke-test.yml"
+  pull_request:
+    paths:
+      - "R/**"
+      - "modules/**"
+      - "tests/**"
+      - "templates/**"
+      - "resources/**"
+      - "run_all.R"
+      - "install_dependencies.R"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r-core-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-smoke:
+    name: Core R workflow
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    env:
+      R_KEEP_PKG_SOURCE: yes
+      OMP_NUM_THREADS: 1
+      OPENBLAS_NUM_THREADS: 1
+      MKL_NUM_THREADS: 1
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.5.3"
+          use-public-rspm: true
+
+      - name: Install smoke-test dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache: always
+          extra-packages: |
+            any::yaml
+            any::digest
+            any::data.table
+            any::Matrix
+            any::ggplot2
+            any::Seurat
+            any::SeuratObject
+            any::scales
+            any::sctransform
+            bioc::glmGamPoi
+            any::svglite
+            any::ragg
+            any::ggrepel
+            any::ggrastr
+            any::ggforce
+            any::concaveman
+            any::dbscan
+            any::png
+            bioc::edgeR
+            bioc::limma
+            bioc::fgsea
+            any::msigdbr
+            any::sessioninfo
+          packages: any::sessioninfo
+
+      - name: Generate synthetic single-cell input
+        run: |
+          Rscript tests/00_generate_smoke_input.R tests/tmp_smoke_project
+
+      - name: Generate CI configuration
+        run: |
+          Rscript - <<'RSCRIPT'
+          library(yaml)
+
+          root <- normalizePath(
+            "tests/tmp_smoke_project",
+            winslash = "/",
+            mustWork = TRUE
+          )
+
+          input_path <- normalizePath(
+            file.path(root, "synthetic_multisample.rds"),
+            winslash = "/",
+            mustWork = TRUE
+          )
+
+          cfg <- yaml::read_yaml("templates/config.full.yml")
+
+          cfg$project_name <- "ci_smoke"
+          cfg$project_root <- root
+          cfg$run_id <- "github_actions"
+
+          cfg$input$path <- input_path
+          cfg$input$type <- "seurat_rds"
+          cfg$input$species <- "human"
+          cfg$input$modality <- "scRNA"
+
+          cfg$metadata$sample_column <- "sample_id"
+          cfg$metadata$patient_column <- "patient_id"
+          cfg$metadata$condition_column <- "condition"
+          cfg$metadata$batch_column <- "batch"
+          cfg$metadata$tissue_column <- "tissue"
+          cfg$metadata$paired <- FALSE
+
+          cfg$runtime$workers <- 2
+          cfg$runtime$future_max_gb <- 8
+          cfg$runtime$hash_large_files <- FALSE
+          cfg$runtime$stop_on_warning <- FALSE
+
+          cfg$analysis$mode <- "full"
+          cfg$analysis$normalization <- "sct_v2"
+          cfg$analysis$integration <- "rpca"
+          cfg$analysis$minimum_cluster_cells <- 10
+
+          cfg$qc$min_features <- 20
+          cfg$qc$min_counts <- 20
+          cfg$qc$max_features_guardrail <- 5000
+          cfg$qc$max_mito_scRNA <- 100
+          cfg$qc$minimum_cells_standard <- 50
+          cfg$qc$minimum_cells_descriptive <- 20
+          cfg$qc$run_doublets <- FALSE
+          cfg$qc$run_ambient_correction <- FALSE
+
+          cfg$annotation$run_singleR <- FALSE
+          cfg$annotation$minimum_cluster_cells_fine <- 20
+
+          cfg$comparisons$reference <- "Control"
+          cfg$comparisons$target <- "Treatment"
+          cfg$comparisons$minimum_cells_per_pseudobulk <- 10
+
+          # Preserve the scientific gate. The synthetic dataset has n=2
+          # samples per condition, so formal pseudobulk inference should
+          # return NOT_EVALUABLE rather than manufacture significance.
+          cfg$comparisons$minimum_replicates_per_condition <- 3
+
+          for (nm in names(cfg$advanced_modules)) {
+            cfg$advanced_modules[[nm]]$enabled <- FALSE
+          }
+
+          output_path <- file.path(root, "config.ci.yml")
+          yaml::write_yaml(cfg, output_path)
+
+          cat("CI config written to:", output_path, "\n")
+          RSCRIPT
+
+      - name: Run complete core workflow
+        run: |
+          Rscript run_all.R \
+            tests/tmp_smoke_project/config.ci.yml \
+            --mode=full
+
+      - name: Validate output contract
+        run: |
+          RESULT_ROOT="tests/tmp_smoke_project/single_cell_results/ci_smoke_github_actions"
+
+          Rscript tests/02_validate_smoke_outputs.R "${RESULT_ROOT}"
+
+          STATUS="$(tr -d '\r\n' < "${RESULT_ROOT}/14_qa/FINAL_STATUS.txt")"
+
+          echo "FINAL_STATUS=${STATUS}"
+
+          if [[ "${STATUS}" != "PASS" && "${STATUS}" != "PASS_WITH_WARNINGS" ]]; then
+            echo "Invalid final workflow status: ${STATUS}"
+            exit 1
+          fi
+
+      - name: Record R session
+        if: always()
+        run: |
+          Rscript -e 'sessioninfo::session_info()' \
+            > tests/tmp_smoke_project/R_session_info.txt
+
+      - name: Upload QA and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: singlecell-core-smoke-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            tests/tmp_smoke_project/R_session_info.txt
+            tests/tmp_smoke_project/config.ci.yml
+            tests/tmp_smoke_project/single_cell_results/ci_smoke_github_actions/00_input_audit/
+            tests/tmp_smoke_project/single_cell_results/ci_smoke_github_actions/13_logs/
+            tests/tmp_smoke_project/single_cell_results/ci_smoke_github_actions/14_qa/
+            tests/tmp_smoke_project/single_cell_results/ci_smoke_github_actions/15_manifests/

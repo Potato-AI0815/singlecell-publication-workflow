@@ -11,6 +11,11 @@ req <- c(
 )
 missing <- req[!file.exists(file.path(root, req))]
 if (length(missing)) stop("Missing smoke outputs: ", paste(missing, collapse = ", "))
+status_path <- file.path(root, "14_qa/FINAL_STATUS.txt")
+status <- trimws(paste(readLines(status_path, warn = FALSE), collapse = "\n"))
+if (!status %in% c("PASS", "PASS_WITH_WARNINGS")) {
+  stop("FINAL_STATUS must be PASS or PASS_WITH_WARNINGS; got: ", status)
+}
 m <- utils::read.csv(file.path(root, "15_manifests/figure_export_manifest.csv"), check.names = FALSE)
 needed <- c("figure_id", "pdf", "tiff", "png", "proof_png", "plot_rds", "parameters", "visual_qa", "visual_qa_status")
 if (!all(needed %in% names(m))) stop("Manifest missing columns: ", paste(setdiff(needed, names(m)), collapse = ", "))
