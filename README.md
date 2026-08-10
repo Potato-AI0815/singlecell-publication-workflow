@@ -12,6 +12,21 @@ The project does not invent replacements for Seurat, CellChat, CopyKAT, GeneNMF,
 
 [中文说明](README.zh-CN.md) · [Repository](https://github.com/Potato-AI0815/singlecell-publication-workflow) · [Validation matrix](VALIDATION_MATRIX.md) · [Known limitations](KNOWN_LIMITATIONS.md) · [Third-party notices](THIRD_PARTY_NOTICES.md)
 
+## Install as an AI Skill
+
+**Skill name:** `single-cell-publication-workflow`
+
+> Repository name ≠ Skill name. The Skill ID is `single-cell-publication-workflow`; the repository is `Potato-AI0815/singlecell-publication-workflow`.
+
+**Install:**
+
+```bash
+npx skills add Potato-AI0815/singlecell-publication-workflow \
+  --skill single-cell-publication-workflow
+```
+
+Public GitHub installation: verified.
+
 ## Maintainer
 
 Maintained by **Potato-AI**.

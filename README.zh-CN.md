@@ -6,6 +6,21 @@
 维护者：**Potato-AI**  
 安全问题请通过邮箱联系：939191004@qq.com
 
+## 作为 AI Skill 安装
+
+**Skill 名称：** `single-cell-publication-workflow`
+
+> 仓库名 ≠ Skill 名。Skill ID 是 `single-cell-publication-workflow`，仓库是 `Potato-AI0815/singlecell-publication-workflow`。
+
+**安装：**
+
+```bash
+npx skills add Potato-AI0815/singlecell-publication-workflow \
+  --skill single-cell-publication-workflow
+```
+
+Public GitHub installation: verified.
+
 它的价值不是重新发明 Seurat、CellChat、CopyKAT、GeneNMF 或 hdWGCNA，而是把这些方法组织成一套受控执行系统：
 
 ```text
